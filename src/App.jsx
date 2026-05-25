@@ -12,6 +12,7 @@ import Search from "./component/Search";
 import Stats from "./component/Stats";
 import Security from "./component/Security";
 import Contact from "./component/Contact";
+import Admin from "./component/Admin";
 
 function Layout() {
   const location = useLocation();
@@ -32,6 +33,8 @@ function Layout() {
           <Route path="/stats" element={<Stats />} />
           <Route path="/security" element={<Security />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
+
         </Routes>
       </main>
 

@@ -1,25 +1,55 @@
 import { useState, useEffect } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import axios from "axios";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from "recharts";
 
 function Stats() {
   const [items, setItems] = useState([]);
 
+  // ✅ FETCH WITH TOKEN (FIXED)
   useEffect(() => {
-    const vault = JSON.parse(localStorage.getItem("vault")) || [];
-    setItems(vault);
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/vault", {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+
+        console.log(res.data); // 🔍 debug
+        setItems(res.data);
+      } catch (err) {
+        console.log(err);
+        alert("Error fetching stats ❌");
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // 📊 COUNTS
-  const imageCount = items.filter(item =>
-    item.fileType?.startsWith("image")
+  // ✅ SAFE COUNTS
+  const imageCount = items.filter(
+    (item) =>
+      item.fileName &&
+      item.fileName.match(/\.(jpg|jpeg|png)/i)
   ).length;
 
-  const pdfCount = items.filter(item =>
-    item.fileType?.includes("pdf")
+  const pdfCount = items.filter(
+    (item) =>
+      item.fileName &&
+      item.fileName.toLowerCase().endsWith(".pdf")
   ).length;
 
-  const docCount = items.filter(item =>
-    item.fileType?.includes("word")
+  const docCount = items.filter(
+    (item) =>
+      item.fileName &&
+      item.fileName.match(/\.(doc|docx)/i)
   ).length;
 
   const data = [
@@ -28,18 +58,21 @@ function Stats() {
     { name: "Docs", value: docCount },
   ];
 
-  // 🔢 COUNTER COMPONENT
+  // ✅ COUNTER
   function Counter({ value }) {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
       let start = 0;
+
       const interval = setInterval(() => {
         start += 1;
+
         if (start >= value) {
           start = value;
           clearInterval(interval);
         }
+
         setCount(start);
       }, 20);
 
@@ -50,43 +83,46 @@ function Stats() {
   }
 
   return (
-    <div className="page-container animate-fade-in" style={{ maxWidth: "700px" }}>
+    <div className="page-container" style={{ maxWidth: "700px" }}>
 
       <h2>Vault Statistics</h2>
       <p style={{ marginBottom: "2rem" }}>
         Overview of your secure storage usage.
       </p>
 
-      {/* 🔢 TOTAL ITEMS CARD */}
+      {/* TOTAL */}
       <div className="stats-card">
         <h3>Total Items</h3>
         <Counter value={items.length} />
         <p>Securely stored files in your vault</p>
       </div>
 
-      {/* 📊 PIE CHART */}
+      {/* CHART */}
       <div className="chart-container">
         <h3 className="chart-title">DATA DISTRIBUTION</h3>
 
-        <PieChart width={300} height={300}>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={index}
-                fill={["#00ffcc", "#7c3aed", "#38bdf8"][index]}
-              />
-            ))}
-          </Pie>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+              dataKey="value"
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={index}
+                  fill={["#00ffcc", "#7c3aed", "#38bdf8"][index]}
+                />
+              ))}
+            </Pie>
 
-          <Tooltip />
-          <Legend />
-        </PieChart>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+
       </div>
 
     </div>

@@ -8,6 +8,7 @@ function FrontPage() {
   const handleUnlock = () => {
     setOpen(true);
 
+    // ⏳ small delay for animation
     setTimeout(() => {
       navigate("/login");
     }, 1500);
@@ -16,12 +17,10 @@ function FrontPage() {
   return (
     <div className="front-container">
 
-      {/* TOP TEXT */}
       <p className="top-text">
         Advanced Protection for Your Confidential Data
       </p>
 
-      {/* BACKGROUND TITLE */}
       <h1 className="main-title">
         <span>SECURE</span>
 
@@ -33,15 +32,15 @@ function FrontPage() {
             {open ? "🔓" : "🔒"}
           </div>
 
-          <p className="hint-text">Tap to unlock secure access</p>
+          <p className="hint-text">
+            Tap to unlock secure access
+          </p>
         </div>
 
         <span>VAULT</span>
       </h1>
 
-
       {open && <p className="access-text">ACCESS GRANTED...</p>}
-
     </div>
   );
 }

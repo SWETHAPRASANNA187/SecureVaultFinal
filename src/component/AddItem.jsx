@@ -1,101 +1,105 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function AddItem() {
+  // 🔐 PROTECT PAGE
+  if (!localStorage.getItem("token")) {
+    window.location.href = "/";
+  }
+
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [success, setSuccess] = useState(false);
   const [lockPass, setLockPass] = useState("");
-  const [askPass, setAskPass] = useState(false);
   const [file, setFile] = useState(null);
+
   const navigate = useNavigate();
 
-  const handleAdd = () => {
-
-
-    if (!file) {
-      alert("Please select a file");
+  // ✅ FINAL SUBMIT FUNCTION
+  const handleAdd = async () => {
+    if (!title || !desc || !lockPass || !file) {
+      alert("All fields required");
       return;
     }
 
-    const reader = new FileReader();
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", desc);
+    formData.append("password", lockPass);
+    formData.append("file", file);
 
-    reader.onload = () => {
-      const newItem = {
-        title,
-        description: desc,
-        password: lockPass,
-        fileName: file.name,
-        fileType: file.type,
-        fileData: reader.result, // 🔥 base64 data
-      };
+    try {
+      await axios.post(
+        "http://127.0.0.1:3000/vault",
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        }
+      );
 
-      const vault = JSON.parse(localStorage.getItem("vault")) || [];
-      vault.push(newItem);
-      localStorage.setItem("vault", JSON.stringify(vault));
+      alert("Stored securely 🔒");
 
-      setSuccess(true);
-    };
+      // ✅ reset form
+      setTitle("");
+      setDesc("");
+      setLockPass("");
+      setFile(null);
 
-    reader.readAsDataURL(file); // convert file → base64
-  };
-  const handleLockClick = () => {
+      // ✅ go back to vault
+      navigate("/vault");
 
-
-    setAskPass(true); // show password field
+    } catch (err) {
+      console.log(err);
+      alert("Error ❌");
+    }
   };
 
   return (
-    <div className="add-container">
+    <div className="page-container">
+      <div className="glass-panel add-box">
 
-      <div className="add-box">
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "15px"
+        }}>
+          <h2>Add Secure Item</h2>
 
-        <h2 className="add-title">DATA ENTRY TERMINAL</h2>
+        </div>
 
-        <p className="add-sub">
-          Insert confidential data into secure vault
-        </p>
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
-        <form onSubmit={(e) => e.preventDefault()}>
+        <textarea
+          placeholder="Description"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+        />
 
-          <div className="form-row-container">
-            <input type="text" placeholder="Enter Title" className="add-box" />
-            <input
-              type="file"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-          </div>
+        <input
+          type="password"
+          placeholder="Set Password"
+          value={lockPass}
+          onChange={(e) => setLockPass(e.target.value)}
+        />
 
-          {askPass && (
-            <input
-              type="password"
-              placeholder="Set Lock Password"
-              value={lockPass}
-              onChange={(e) => setLockPass(e.target.value)}
-            />
-          )}
+        {/* 📂 FILE INPUT */}
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
 
-          <div
-            className={`lock-submit ${success ? "locked" : ""}`}
-            onClick={askPass ? handleAdd : handleLockClick}
-          >
-            <span className="lock-icon">
-              {success ? "🔒" : "🔓"}
-            </span>
-
-            <p>
-              {success
-                ? "Data Secured ✅"
-                : askPass
-                  ? "Tap to Confirm Lock"
-                  : "Tap to Secure Data"}
-            </p>
-          </div>
-
-        </form>
+        <button className="btn btn-primary" onClick={handleAdd}>
+          LOCK & STORE 🔒
+        </button>
 
       </div>
-
     </div>
   );
 }
