@@ -19,7 +19,7 @@ function Vault() {
   const fetchVault = async () => {
     try {
       const res = await axios.get(
-        "http://127.0.0.1:3000/vault",
+        "https://securevaultfinal.onrender.com/vault",
         {
           headers: {
             Authorization: localStorage.getItem("token")
@@ -40,7 +40,7 @@ function Vault() {
 
   // ✅ DELETE
   const handleDelete = async (id) => {
-  await axios.delete(`http://127.0.0.1:3000/vault/${id}`, {
+  await axios.delete(`https://securevaultfinal.onrender.com/vault/${id}`, {
     headers: {
       Authorization: localStorage.getItem("token")
     }
@@ -70,9 +70,7 @@ function Vault() {
       }}>
         <h2>My Vault 🔐</h2>
 
-        <button onClick={() => navigate("/add")}>
-          + Add New
-        </button>
+        
       </div>
 
       {/* EMPTY */}

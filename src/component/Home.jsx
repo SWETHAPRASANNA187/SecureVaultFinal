@@ -7,7 +7,7 @@ function Home() {
   const handleStart = async () => {
     try {
       // 🔥 check backend is running
-      await axios.get("http://localhost:3000/");
+      await axios.get("https://securevaultfinal.onrender.com/");
 
       // if OK → go to login
       navigate("/login");

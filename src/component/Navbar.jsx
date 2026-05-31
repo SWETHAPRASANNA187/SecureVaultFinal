@@ -7,7 +7,7 @@ function Navbar() {
   const handleLogout = async () => {
     try {
       // optional backend logout
-      await axios.post("http://localhost:3000/logout");
+      await axios.post("https://securevaultfinal.onrender.com/logout");
 
       // clear frontend auth (if you store anything later)
       localStorage.clear();

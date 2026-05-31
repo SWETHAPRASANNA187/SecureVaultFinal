@@ -19,7 +19,7 @@ function Search() {
   useEffect(() => {
     const fetchVault = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:3000/vault", {
+        const res = await axios.get("https://securevaultfinal.onrender.com/vault", {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

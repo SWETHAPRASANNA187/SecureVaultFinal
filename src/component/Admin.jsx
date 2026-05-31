@@ -15,7 +15,7 @@ function Admin() {
 
   // 📩 FETCH CONTACT MESSAGES
   useEffect(() => {
-    axios.get("http://localhost:3000/contact")
+    axios.get("https://securevaultfinal.onrender.com/contact")
       .then(res => setMessages(res.data))
       .catch(err => console.log(err));
   }, []);
@@ -23,7 +23,7 @@ function Admin() {
   // ❌ DELETE MESSAGE
   const deleteMsg = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/contact/${id}`);
+      await axios.delete(`https://securevaultfinal.onrender.com/contact/${id}`);
       setMessages(messages.filter(msg => msg._id !== id));
     } catch {
       alert("Delete failed ❌");

@@ -16,7 +16,7 @@ function Stats() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/vault", {
+        const res = await axios.get("https://securevaultfinal.onrender.com/vault", {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

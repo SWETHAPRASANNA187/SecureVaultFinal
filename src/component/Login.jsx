@@ -12,7 +12,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://127.0.0.1:3000/login", {
+      const res = await axios.post("https://securevaultfinal.onrender.com/login", {
         username: user,
         password: pass,
       });
@@ -39,7 +39,7 @@ function Login() {
   // 🆕 REGISTER
   const handleRegister = async () => {
     try {
-      const res = await axios.post("http://127.0.0.1:3000/register", {
+      const res = await axios.post("https://securevaultfinal.onrender.com/register", {
         username: user,
         password: pass,
       });

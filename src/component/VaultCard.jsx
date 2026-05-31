@@ -6,7 +6,7 @@ function VaultCard({ item, onDelete }) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3000/vault/${item.id}`);
+      await axios.delete(`https://securevaultfinal.onrender.com/vault/${item.id}`);
       onDelete(item.id); // update parent UI
     } catch (err) {
       console.log(err);

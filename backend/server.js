@@ -1,11 +1,11 @@
-require("dotenv").config();
-const express = require("express");
+require("dotenv").config({ path: "./.env" });
+const connectDB = require("./config/db");
 const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const express = require("express");
 const app = express();
 
 app.use(cors());
@@ -16,20 +16,10 @@ const SECRET = process.env.JWT_SECRET;
 // =====================
 // MONGODB CONNECTION
 // =====================
-async function connectDB() {
-  try {
-    console.log("URI:");
-console.log(process.env.MONGO_URI);
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected ✅");
-  } catch (err) {
-    console.error("MongoDB Error ❌", err);
-    process.exit(1);
-  }
-}
-
 connectDB();
-
+app.get("/", (req, res) => {
+  res.send("SecureVault Backend Running ✅");
+});
 // =====================
 // MULTER
 // =====================
